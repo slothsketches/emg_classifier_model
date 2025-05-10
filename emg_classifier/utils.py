@@ -1,8 +1,8 @@
 import pathlib
-import re
 import typing as t
 
-FILENAME_LABEL = re.compile(r"measurement_(.+?)(?:_\d+)?\.txt")
+import numpy as np
+import torch
 
 
 def load_from_sample(path: t.Union[pathlib.Path, str]):
@@ -16,10 +16,26 @@ def load_from_sample(path: t.Union[pathlib.Path, str]):
         yield int(line[29:])
 
 
-def label_from_filename(filename: str):
-    match = FILENAME_LABEL.search(filename)
+def load_from_sample_windowed(
+    path: t.Union[pathlib.Path, str], window_size: int, stride: t.Optional[int] = None
+):
+    if stride is None:
+        stride = window_size
 
-    if match:
-        return match.group(1)
+    signals = list(load_from_sample(path))
 
-    return filename
+    for i in range(0, len(signals) - window_size + 1, stride):
+        yield signals[i : i + window_size]
+
+
+def normalize_windows(arrays: np.ndarray):
+    for i in range(arrays.shape[0]):
+        mean = np.mean(arrays[i])
+        stddev = np.std(arrays[i])
+
+        arrays[i] -= mean
+
+        if stddev != 0:
+            arrays[i] /= stddev
+
+    return torch.tensor(arrays)
