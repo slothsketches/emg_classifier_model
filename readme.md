@@ -24,7 +24,8 @@ Our system uses sliding windows to segment the data, performs normalizations on 
 
 The testing data remain isolated throughout the training. The following results were observed with our initial data collection.
 
-![Statistics Screenshot](./assets/screenshot.png)
+![Statistics Screenshot](./assets/screenshot_1.png)
+![Confusion Matrix Screenshot](./assets/screenshot_2.png)
 
 ### Future enhancements
 

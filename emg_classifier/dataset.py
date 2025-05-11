@@ -35,13 +35,9 @@ class EMGDataset(Dataset):
         labels = []
         windows = []
 
-        n = 0
-
         for label, paths in datastore.items():
-            k = n
             for path in paths:
                 for window in load_from_sample_windowed(path, window_size, stride):
-                    k += 1
                     windows.append(window)
                     labels.append(label)
 
